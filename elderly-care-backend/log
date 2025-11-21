@@ -215,3 +215,4 @@ Cannot connect to database: dial tcp [::1]:52004: connectex: No connection could
 数据库初始化成功
 数据库初始化成功
 数据库初始化成功
+Cannot connect to database: Error 1045 (28000): Access denied for user 'root'@'localhost' (using password: NO)
