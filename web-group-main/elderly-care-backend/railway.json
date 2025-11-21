@@ -1,0 +1,9 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "go run main.go",
+    "restartPolicyType": "ON_FAILURE"
+  }
+}
