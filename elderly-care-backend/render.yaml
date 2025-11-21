@@ -1,0 +1,13 @@
+# 创建 render.yaml
+services:
+  - type: web
+    name: elderly-care-backend
+    env: go
+    plan: free
+    buildCommand: go mod download && go build -o main main.go
+    startCommand: ./main
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DB_HOST
+        value: your-db-host
