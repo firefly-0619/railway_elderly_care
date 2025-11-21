@@ -1,0 +1,51 @@
+server:
+  name: elderly_care
+  port: 8080
+  profile: dev
+  node_id: 1
+database:
+  host: localhost
+  port: 3307
+  user: root
+  password: ""
+  db: elderly_care
+  idle_connections: 10
+  max_connections: 100
+  max_lifetime: 3600 #单位秒
+redis:
+  host: localhost #192.168.183.128
+  port: 6379
+  db: 2
+log:
+  output: log
+jwt:
+  secret_key: hello
+  expire: 36000
+  refresh_expire: 360000
+kafka:
+  async : true
+  address:
+    - localhost #192.168.183.128:9091
+oss:
+  aliyun:
+    enable: false
+    endpoint: "www"
+    access_key_id: "www"
+    secret_access_key: "www"
+    use_ssl: false
+  minio:
+    enable : true
+    endpoint: localhost:9000 #192.168.183.128:9000
+    access_key_id: yuqCR5uxkPbTG4hIc7aY
+    secret_access_key: mW3B086tdEG4kh7DfS39tO6izkGytp85hTDirGon
+    use_ssl: false
+    avatar_bucket: "avatar-bucket"
+    chat_bucket: "chat-bucket"
+# config.yaml 添加
+# 在现有配置的 jwt 部分后添加
+map:
+  amap:
+    enable: true
+    api_key: "d6278bdb5da84c4155b990e47ebccf47"
+    base_url: "https://restapi.amap.com"
+

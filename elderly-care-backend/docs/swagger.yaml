@@ -1,0 +1,1063 @@
+definitions:
+  dto.AcceptSOSRequest:
+    properties:
+      volunteer_id:
+        description: 改为uint
+        type: integer
+    required:
+    - volunteer_id
+    type: object
+  dto.AcceptTaskRequest:
+    properties:
+      volunteer_id:
+        description: 改为uint
+        type: integer
+      volunteer_lat:
+        type: number
+      volunteer_lng:
+        type: number
+    required:
+    - volunteer_id
+    - volunteer_lat
+    - volunteer_lng
+    type: object
+  dto.CreateTaskRequest:
+    properties:
+      address:
+        type: string
+      category:
+        type: string
+      creator_id:
+        description: 改为uint
+        type: integer
+      deadline:
+        type: string
+      description:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+      reward:
+        type: number
+      title:
+        type: string
+    required:
+    - address
+    - category
+    - creator_id
+    - description
+    - latitude
+    - longitude
+    - title
+    type: object
+  dto.ResolveSOSRequest:
+    properties:
+      resolved_by:
+        description: 改为uint
+        type: integer
+    required:
+    - resolved_by
+    type: object
+  dto.SOSRequest:
+    properties:
+      address:
+        type: string
+      description:
+        type: string
+      latitude:
+        type: number
+      longitude:
+        type: number
+      severity:
+        type: string
+      user_id:
+        description: 改为uint
+        type: integer
+    required:
+    - address
+    - description
+    - latitude
+    - longitude
+    - user_id
+    type: object
+  models.LocationUpdate:
+    properties:
+      accuracy:
+        type: number
+      address:
+        type: string
+      heading:
+        type: number
+      latitude:
+        type: number
+      longitude:
+        type: number
+      speed:
+        type: number
+      user_id:
+        type: integer
+    type: object
+  models.UserLocation:
+    properties:
+      accuracy:
+        description: 定位精度
+        type: number
+      address:
+        type: string
+      createdAt:
+        type: string
+      heading:
+        description: 移动方向
+        type: number
+      id:
+        description: 自增ID
+        type: integer
+      latitude:
+        type: number
+      longitude:
+        type: number
+      speed:
+        description: 移动速度
+        type: number
+      updatedAt:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  vo.ResponseVO:
+    properties:
+      data: {}
+      msg:
+        type: string
+      success:
+        type: boolean
+    type: object
+  vo.SOSRecordVO:
+    properties:
+      address:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      latitude:
+        type: number
+      longitude:
+        type: number
+      severity:
+        type: string
+      status:
+        type: string
+      task_id:
+        type: integer
+      timeout:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  vo.SOSResponseVO:
+    properties:
+      matches:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+      sos_id:
+        type: integer
+      task_id:
+        type: integer
+      timeout:
+        type: integer
+    type: object
+  vo.TaskMatchVO:
+    properties:
+      matches:
+        items:
+          additionalProperties: true
+          type: object
+        type: array
+      task:
+        $ref: '#/definitions/vo.TaskVO'
+    type: object
+  vo.TaskVO:
+    properties:
+      address:
+        type: string
+      category:
+        type: string
+      created_at:
+        type: string
+      creator_id:
+        type: integer
+      creator_name:
+        type: string
+      description:
+        type: string
+      distance:
+        type: number
+      id:
+        type: integer
+      is_emergency:
+        type: boolean
+      latitude:
+        type: number
+      longitude:
+        type: number
+      reward:
+        type: number
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: 养老服务平台接口文档
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: elderly-care-backend
+  version: "1.0"
+paths:
+  /account:
+    get:
+      consumes:
+      - application/json
+      description: 获取登录账号信息
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 错误
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取登录账号信息
+      tags:
+      - 账号模块
+    put:
+      consumes:
+      - multipart/form-data
+      description: 更新账号信息
+      parameters:
+      - description: 昵称
+        in: formData
+        name: nickname
+        type: string
+      - description: 头像
+        in: formData
+        name: avatar
+        type: file
+      - description: 性别
+        in: formData
+        name: sex
+        type: integer
+      - description: 年龄
+        in: formData
+        name: age
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 错误
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新账号信息 (不包括更新密码)
+      tags:
+      - 账号模块
+  /account/{accountID}:
+    get:
+      consumes:
+      - application/json
+      description: 根据账号ID获取账号信息
+      parameters:
+      - description: 账号ID
+        in: path
+        name: accountID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 错误
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 根据账号ID获取账号信息
+      tags:
+      - 账号模块
+  /account/changePassword:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 原密码
+        in: query
+        name: oldPassword
+        required: true
+        type: string
+      - description: 新密码
+        in: query
+        name: newPassword
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 错误
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 修改密码
+      tags:
+      - 账号模块
+  /account/checkPhone:
+    get:
+      consumes:
+      - application/json
+      description: 手机号是否已被注册
+      parameters:
+      - description: 手机号
+        in: query
+        name: phone
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "400":
+          description: 失败
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      summary: 校验手机号
+      tags:
+      - 账号模块
+  /account/login:
+    post:
+      consumes:
+      - application/json
+      description: 登录
+      parameters:
+      - description: 手机号
+        in: query
+        name: phone
+        required: true
+        type: string
+      - description: 密码
+        in: query
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "400":
+          description: 失败
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      summary: 登录
+      tags:
+      - 账号模块
+  /account/register:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 注册
+      parameters:
+      - description: 昵称
+        in: formData
+        name: nickname
+        required: true
+        type: string
+      - description: 手机号
+        in: formData
+        name: phone
+        required: true
+        type: string
+      - description: 密码
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: 头像
+        in: formData
+        name: avatar
+        required: true
+        type: file
+      - description: 性别(男性:0,女性:1)
+        in: formData
+        name: sex
+        required: true
+        type: integer
+      - description: 年龄
+        in: formData
+        name: age
+        required: true
+        type: integer
+      - description: 角色(user , admin)
+        in: formData
+        name: role
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "400":
+          description: 错误
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      summary: 注册
+      tags:
+      - 账号模块
+  /chat/contactList:
+    get:
+      consumes:
+      - application/json
+      description: 最近的联系人
+      parameters:
+      - description: 聊天时间:格式，2025-11-09T13:49:06.732+08:00(用于上滑加载，避免一次性加载过多，默认返回最近的聊过天的几个联系人)
+        in: query
+        name: lastChatTime
+        type: string
+      - description: 返回数量
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 最近的联系人
+      tags:
+      - 聊天模块
+  /chat/record:
+    get:
+      consumes:
+      - application/json
+      description: 聊天记录
+      parameters:
+      - description: 聊天对象用户ID(用于上滑加载，避免一次性加载过多，默认返回最近的几条聊天信息)
+        in: query
+        name: accountID
+        required: true
+        type: integer
+      - description: 消息ID
+        in: query
+        name: messageID
+        type: integer
+      - description: 返回数量
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 聊天记录
+      tags:
+      - 聊天模块
+  /evaluation/account:
+    get:
+      consumes:
+      - application/json
+      description: 获取账号评价
+      parameters:
+      - description: 账号ID
+        in: query
+        name: accountID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取账号评价
+      tags:
+      - 评价模块
+    put:
+      consumes:
+      - application/json
+      description: 任务完成后对任务进行评价
+      parameters:
+      - description: 评价的账号ID
+        in: query
+        name: accountID
+        required: true
+        type: integer
+      - description: 得分（1-5分）
+        in: query
+        name: score
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 评价账号
+      tags:
+      - 评价模块
+  /file/upload:
+    post:
+      consumes:
+      - multipart/form-data
+      description: 文件上传
+      parameters:
+      - description: 文件
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+        "500":
+          description: 失败
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 文件上传
+      tags:
+      - 文件模块
+  /location/history:
+    get:
+      consumes:
+      - application/json
+      description: 获取用户的最近位置记录
+      parameters:
+      - default: 10
+        description: 返回数量
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取用户历史位置
+      tags:
+      - 定位模块
+  /location/navigation:
+    get:
+      consumes:
+      - application/json
+      description: 根据起点终点计算步行导航路线
+      parameters:
+      - description: 起点坐标 格式:经度,纬度
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: 终点坐标 格式:经度,纬度
+        in: query
+        name: to
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      summary: 计算导航路线
+      tags:
+      - 定位模块
+  /location/navigation/location:
+    get:
+      consumes:
+      - application/json
+      description: 根据位置记录ID计算导航路线
+      parameters:
+      - description: 位置记录ID
+        in: query
+        name: locationId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 根据位置ID导航
+      tags:
+      - 定位模块
+  /location/navigation/to-target:
+    get:
+      consumes:
+      - application/json
+      description: 获取当前用户到指定目标的导航路线
+      parameters:
+      - description: 目标纬度
+        in: query
+        name: targetLat
+        required: true
+        type: number
+      - description: 目标经度
+        in: query
+        name: targetLng
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 获取用户到目标的导航路线
+      tags:
+      - 定位模块
+  /location/navigation/user:
+    get:
+      consumes:
+      - application/json
+      description: 计算两个用户之间的导航路线
+      parameters:
+      - description: 目标用户ID
+        in: query
+        name: targetUserId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户间导航
+      tags:
+      - 定位模块
+  /location/nearby:
+    get:
+      consumes:
+      - application/json
+      description: 获取附近的志愿者或求助者
+      parameters:
+      - description: 纬度
+        in: query
+        name: lat
+        required: true
+        type: number
+      - description: 经度
+        in: query
+        name: lng
+        required: true
+        type: number
+      - default: 5000
+        description: 搜索半径
+        in: query
+        name: radius
+        type: number
+      - description: 用户角色
+        enum:
+        - volunteer
+        - user
+        in: query
+        name: role
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.ResponseVO'
+            - properties:
+                data:
+                  items: {}
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取附近用户
+      tags:
+      - 实时定位
+  /location/reverse-geocode:
+    get:
+      consumes:
+      - application/json
+      description: 将经纬度坐标转换为详细地址
+      parameters:
+      - description: 经度
+        in: query
+        name: lng
+        required: true
+        type: string
+      - description: 纬度
+        in: query
+        name: lat
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      summary: 坐标转地址
+      tags:
+      - 定位模块
+  /location/update:
+    post:
+      consumes:
+      - application/json
+      description: 实时更新用户当前位置
+      parameters:
+      - description: 位置更新请求
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.LocationUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新用户位置
+      tags:
+      - 实时定位
+  /location/user/{userId}:
+    get:
+      consumes:
+      - application/json
+      description: 获取指定用户的当前位置
+      parameters:
+      - description: 用户ID
+        in: path
+        name: userId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.ResponseVO'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.UserLocation'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取用户当前位置
+      tags:
+      - 实时定位
+  /sos/{sosId}/accept:
+    post:
+      consumes:
+      - application/json
+      description: 志愿者接受SOS紧急求助
+      parameters:
+      - description: SOS记录ID
+        in: path
+        name: sosId
+        required: true
+        type: integer
+      - description: 接受SOS请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AcceptSOSRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 接受SOS求助
+      tags:
+      - SOS模块
+  /sos/{sosId}/resolve:
+    put:
+      consumes:
+      - application/json
+      description: 标记SOS紧急求助为已解决
+      parameters:
+      - description: SOS记录ID
+        in: path
+        name: sosId
+        required: true
+        type: integer
+      - description: 解决SOS请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ResolveSOSRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 解决SOS求助
+      tags:
+      - SOS模块
+  /sos/current:
+    get:
+      consumes:
+      - application/json
+      description: 获取用户当前的SOS求助状态
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.ResponseVO'
+            - properties:
+                data:
+                  $ref: '#/definitions/vo.SOSRecordVO'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取当前SOS状态
+      tags:
+      - SOS模块
+  /sos/emergency:
+    post:
+      consumes:
+      - application/json
+      description: 用户触发SOS紧急求助
+      parameters:
+      - description: SOS求助请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SOSRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.ResponseVO'
+            - properties:
+                data:
+                  $ref: '#/definitions/vo.SOSResponseVO'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 触发紧急求助
+      tags:
+      - SOS模块
+  /tasks:
+    post:
+      consumes:
+      - application/json
+      description: 创建新的求助任务
+      parameters:
+      - description: 创建任务请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.ResponseVO'
+            - properties:
+                data:
+                  $ref: '#/definitions/vo.TaskMatchVO'
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 创建任务
+      tags:
+      - 任务模块
+  /tasks/{taskId}/accept:
+    post:
+      consumes:
+      - application/json
+      description: 志愿者接受任务
+      parameters:
+      - description: 任务ID
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      - description: 接受任务请求参数
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AcceptTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.ResponseVO'
+      security:
+      - ApiKeyAuth: []
+      summary: 接受任务
+      tags:
+      - 任务模块
+  /tasks/nearby:
+    get:
+      consumes:
+      - application/json
+      description: 根据位置获取附近的任务列表
+      parameters:
+      - description: 纬度
+        in: query
+        name: lat
+        required: true
+        type: number
+      - description: 经度
+        in: query
+        name: lng
+        required: true
+        type: number
+      - default: 5000
+        description: 搜索半径(米)
+        in: query
+        name: radius
+        type: number
+      - description: 任务分类
+        in: query
+        name: category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/vo.ResponseVO'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/vo.TaskVO'
+                  type: array
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取附近任务
+      tags:
+      - 任务模块
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
